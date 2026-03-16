@@ -1,0 +1,217 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = "Accesos Vasculares — Hospital del Salvador",
+  description = "Guía clínica rápida sobre dispositivos de acceso vascular (PICC, CVC, Midline) para personal de enfermería y medicina del Hospital del Salvador."
+} = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23080b13'/><text y='68' x='17' font-size='60'>🩺</text></svg>" />
+  </head>
+  <body>
+
+    <!-- Scroll progress bar -->
+    <div id="scroll-progress" role="progressbar" aria-hidden="true"></div>
+
+    <!-- ── Header ────────────────────────────────────────────────── -->
+    <header id="site-header"
+            class="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+            style="background: rgba(6,9,15,0.6); backdrop-filter: blur(20px) saturate(1.4); border-bottom: 1px solid rgba(255,255,255,0.04);">
+      <div class="container-section h-16 flex items-center justify-between">
+
+        <!-- Logo -->
+        <a href="#hero" class="flex items-center gap-3 group">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center relative overflow-hidden"
+               style="background: linear-gradient(135deg, rgba(212,168,83,0.15), rgba(212,168,83,0.05)); border: 1px solid rgba(212,168,83,0.2);">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--accent);">
+              <path d="M12 2L12 22M12 2C10 6 6 8 2 8M12 2C14 6 18 8 22 8M7 13H17M9 17H15"/>
+            </svg>
+          </div>
+          <div class="leading-none">
+            <p class="text-[10px] tracking-[0.15em] uppercase" style="color: var(--subtle);">Hospital del Salvador</p>
+            <p class="text-sm font-semibold text-white mt-0.5">Accesos Vasculares</p>
+          </div>
+        </a>
+
+        <!-- Desktop nav -->
+        <nav class="hidden md:flex items-center gap-0.5" aria-label="Navegación principal">
+          <a href="#referencia"   class="nav-link px-3.5 py-2 rounded-lg hover:bg-white/4">Referencia</a>
+          <a href="#dispositivos" class="nav-link px-3.5 py-2 rounded-lg hover:bg-white/4">Dispositivos</a>
+          <a href="#fichas"       class="nav-link px-3.5 py-2 rounded-lg hover:bg-white/4">Fichas</a>
+          <a href="#procedimiento" class="nav-link px-3.5 py-2 rounded-lg hover:bg-white/4">Procedimiento</a>
+          <a href="#comparativa"  class="nav-link px-3.5 py-2 rounded-lg hover:bg-white/4">Comparativa</a>
+          <span class="w-px h-4 bg-white/8 mx-1"></span>
+          <a href="#seguridad" class="nav-link px-3.5 py-2 rounded-lg hover:bg-amber-500/5" style="color: var(--accent);">Seguridad</a>
+        </nav>
+
+        <!-- Badge + Mobile toggle -->
+        <div class="flex items-center gap-3">
+          <span class="hidden sm:inline-block text-[10px] tracking-[0.12em] uppercase px-3 py-1.5 rounded-full border"
+                style="color: var(--subtle); border-color: var(--border);">
+            Uso interno
+          </span>
+          <button id="menu-toggle"
+                  class="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl hover:bg-white/5 transition-colors"
+                  aria-label="Abrir menú" aria-expanded="false">
+            <span class="w-5 h-0.5 bg-white/70 rounded-full transition-all duration-200" id="hb-1"></span>
+            <span class="w-5 h-0.5 bg-white/70 rounded-full transition-all duration-200" id="hb-2"></span>
+            <span class="w-3.5 h-0.5 bg-white/70 rounded-full transition-all duration-200" id="hb-3"></span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ── Mobile menu ──────────────────────────────────────────── -->
+    <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menú de navegación">
+      <nav class="text-center space-y-1">
+        {[
+          ['#hero',          'Inicio'],
+          ['#referencia',    'Referencia'],
+          ['#dispositivos',  'Dispositivos'],
+          ['#fichas',        'Fichas Técnicas'],
+          ['#procedimiento', 'Procedimiento'],
+          ['#comparativa',   'Comparativa'],
+          ['#seguridad',     'Seguridad'],
+        ].map(([href, label]) => (
+          <a href={href}
+             class="block px-8 py-3.5 text-lg font-medium rounded-xl hover:bg-white/4 transition-colors text-white/80 hover:text-white nav-mobile-link">
+            {label}
+          </a>
+        ))}
+      </nav>
+      <button id="menu-close"
+              class="mt-10 text-sm flex items-center gap-2 transition-colors px-4 py-2 rounded-lg hover:bg-white/5"
+              style="color: var(--muted);">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        Cerrar
+      </button>
+    </div>
+
+    <!-- ── Main content ─────────────────────────────────────────── -->
+    <main>
+      <slot />
+    </main>
+
+    <!-- ── Footer ────────────────────────────────────────────────── -->
+    <footer class="border-t py-16 mt-24" style="border-color: var(--border);">
+      <div class="container-section">
+        <div class="flex flex-col sm:flex-row items-start justify-between gap-8">
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="w-1.5 h-1.5 rounded-full" style="background: var(--accent);"></div>
+              <p class="text-sm font-semibold text-white/70" style="font-family: var(--font-display);">Hospital del Salvador</p>
+            </div>
+            <p class="text-xs leading-relaxed max-w-sm" style="color: var(--muted);">
+              Departamento de Enfermería y Medicina Vascular.<br/>
+              Material educativo de uso interno.
+            </p>
+          </div>
+          <div class="text-right">
+            <p class="text-[10px] uppercase tracking-[0.15em] mb-2" style="color: var(--subtle);">Aviso</p>
+            <p class="text-xs leading-relaxed max-w-xs" style="color: var(--muted);">
+              No reemplaza protocolos clínicos vigentes.
+              Basar decisiones en evaluación clínica individual.
+            </p>
+          </div>
+        </div>
+        <div class="gold-line mt-10 mb-4"></div>
+        <p class="text-[11px] text-center" style="color: var(--subtle);">
+          Guía de Accesos Vasculares · Hospital del Salvador · Santiago, Chile
+        </p>
+      </div>
+    </footer>
+
+    <!-- ── GSAP: scroll progress + mobile menu + smooth scroll ──── -->
+    <script>
+      import { gsap } from 'gsap';
+      import { ScrollTrigger } from 'gsap/ScrollTrigger';
+      import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+      gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+      // Scroll progress bar
+      gsap.to('#scroll-progress', {
+        scaleX: 1,
+        ease: 'none',
+        scrollTrigger: { scrub: 0.15, start: 'top top', end: 'bottom bottom' },
+      });
+
+      // Header solid on scroll
+      ScrollTrigger.create({
+        start: 'top -80',
+        onUpdate(self) {
+          const hdr = document.getElementById('site-header');
+          if (!hdr) return;
+          if (self.progress > 0) {
+            hdr.style.background = 'rgba(6,9,15,0.88)';
+            hdr.style.boxShadow = '0 1px 48px rgba(0,0,0,0.4)';
+            hdr.style.borderBottomColor = 'rgba(255,255,255,0.06)';
+          } else {
+            hdr.style.background = 'rgba(6,9,15,0.6)';
+            hdr.style.boxShadow = '';
+            hdr.style.borderBottomColor = 'rgba(255,255,255,0.04)';
+          }
+        },
+      });
+
+      // Smooth scroll for all anchor links
+      document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+          e.preventDefault();
+          const target = document.querySelector(a.getAttribute('href')!);
+          if (!target) return;
+          gsap.to(window, { duration: 1, scrollTo: { y: target, offsetY: 72 }, ease: 'power3.inOut' });
+          closeMobileMenu();
+        });
+      });
+
+      // Mobile menu
+      const toggle   = document.getElementById('menu-toggle')!;
+      const menu     = document.getElementById('mobile-menu')!;
+      const closeBtn = document.getElementById('menu-close')!;
+      const hb1 = document.getElementById('hb-1')!;
+      const hb2 = document.getElementById('hb-2')!;
+      const hb3 = document.getElementById('hb-3')!;
+
+      function openMobileMenu() {
+        menu.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+        gsap.fromTo(menu, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+        gsap.to([hb1, hb3], { opacity: 0, duration: 0.15 });
+        gsap.to(hb2, { rotate: 45, scaleX: 1.2, duration: 0.2 });
+      }
+
+      function closeMobileMenu() {
+        gsap.to(menu, {
+          opacity: 0, duration: 0.2,
+          onComplete() { menu.classList.remove('open'); }
+        });
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        gsap.to([hb1, hb3], { opacity: 1, duration: 0.15, delay: 0.1 });
+        gsap.to(hb2, { rotate: 0, scaleX: 1, duration: 0.2 });
+      }
+
+      toggle.addEventListener('click', () =>
+        menu.classList.contains('open') ? closeMobileMenu() : openMobileMenu()
+      );
+      closeBtn.addEventListener('click', closeMobileMenu);
+      menu.addEventListener('click', e => { if (e.target === menu) closeMobileMenu(); });
+    </script>
+  </body>
+</html>

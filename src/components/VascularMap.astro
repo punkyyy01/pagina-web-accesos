@@ -1,0 +1,376 @@
+---
+/**
+ * VascularMap.astro
+ *
+ * Inyecta el SVG anatómico de Figma (enriquecido con overlay de rutas)
+ * directamente como inline SVG para que GSAP acceda a cada <path>.
+ *
+ * Técnica de animación:
+ *   strokeDasharray  = getTotalLength()   (longitud total del trazado)
+ *   strokeDashoffset = getTotalLength()   (catéter "sin dibujar")
+ *   GSAP anima offset → 0 vinculado al scroll  (catéter "avanzando")
+ *   Al subir el scroll: el catéter "retrocede" (reversible)
+ *
+ * Sincronización clínica:
+ *   Cada hito anatómico (waypoint) se activa exactamente cuando
+ *   la "punta" del catéter pasa por esa zona del SVG.
+ */
+import svgContent from '../assets/anatomy.svg?raw';
+---
+
+<div id="vascular-map-section" class="relative">
+
+  <!-- ── SVG inline ──────────────────────────────────────────────── -->
+  <div id="svg-container" class="relative flex justify-center items-center
+       bg-[#060a10] rounded-2xl overflow-hidden border border-white/8">
+
+    <!-- Badge del dispositivo activo -->
+    <div id="device-badge"
+         class="absolute top-3 right-3 z-10 px-3 py-1.5 rounded-full
+                text-xs font-bold bg-black/50 backdrop-blur-sm
+                border border-cyan-500/60 text-cyan-400
+                transition-all duration-300 select-none">
+      PICC
+    </div>
+
+    <!-- Contenedor del SVG — preserva proporciones 550:830 -->
+    <div class="w-full" style="max-width:480px;">
+      <Fragment set:html={svgContent} />
+    </div>
+
+    <!-- Overlay oscuro al inicio para mejorar contraste -->
+    <div id="map-overlay-dark"
+         class="absolute inset-0 bg-[#060a10]/30 pointer-events-none
+                transition-opacity duration-1000">
+    </div>
+  </div>
+
+  <!-- ── Panel de etapa actual (se actualiza con el scroll) ───────── -->
+  <div id="stage-display"
+       class="mt-4 px-4 py-3 rounded-xl bg-white/5 border border-white/10
+              min-h-[60px] transition-all duration-300">
+    <p id="stage-label"  class="text-sm font-semibold text-white"></p>
+    <p id="stage-detail" class="text-xs text-slate-400 mt-0.5"></p>
+  </div>
+
+</div>
+
+<style>
+  /* El SVG de Figma tiene width/height hardcodeados — los sobreescribimos */
+  #svg-container svg {
+    width:  100% !important;
+    height: auto !important;
+    display: block;
+  }
+</style>
+
+<script>
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
+
+// ────────────────────────────────────────────────────────────────────
+// DEFINICIÓN CLÍNICA DE DISPOSITIVOS
+// Cada dispositivo tiene:
+//   - routeId:   ID del <path> en el SVG a animar
+//   - color:     color del catéter
+//   - stages:    hitos clínicos con progreso [0-1] y descripción
+//   - waypointIds: IDs de los círculos a mostrar en cada hito
+// ────────────────────────────────────────────────────────────────────
+const DEVICES = {
+  picc: {
+    label:      'PICC',
+    routeId:    '#route-picc',
+    color:      '#00e5ff',
+    badgeCls:   'border-cyan-500/60 text-cyan-400',
+    stages: [
+      {
+        progress:   0.00,
+        waypointId: '#wp-insert',
+        label:      '① Inserción — Fosa antecubital',
+        detail:     'V. Basílica del brazo derecho. Técnica aséptica con ultrasonido.',
+      },
+      {
+        progress:   0.35,
+        waypointId: '#wp-axilar',
+        label:      '② Vena Axilar',
+        detail:     'El catéter asciende medialmente por el brazo superior hacia la axila.',
+      },
+      {
+        progress:   0.52,
+        waypointId: '#wp-subclavia',
+        label:      '③ Vena Subclavia ⚠',
+        detail:     'Zona de mayor riesgo mecánico — evitar compresión costo-clavicular.',
+      },
+      {
+        progress:   0.70,
+        waypointId: '#wp-braquioc',
+        label:      '④ V. Braquiocefálica',
+        detail:     'Confluencia venosa hacia la línea media. Catéter en trayecto correcto.',
+      },
+      {
+        progress:   1.00,
+        waypointId: '#wp-vcs',
+        label:      '⑤ VCS — Unión Cavoatrial ✓',
+        detail:     'Posición óptima: tercio inferior VCS. Confirmar con ECG intravascular o Rx tórax.',
+      },
+    ],
+  },
+
+  'cvc-subclavio': {
+    label:      'CVC Subclavio',
+    routeId:    '#route-cvc-subclavio',
+    color:      '#f97316',
+    badgeCls:   'border-orange-500/60 text-orange-400',
+    stages: [
+      {
+        progress:   0.00,
+        waypointId: '#wp-cvc-sub',
+        label:      '① Punción Infraclavicular',
+        detail:     '1/3 medio de la clavícula derecha. Ángulo 15–30° hacia la horquilla esternal.',
+      },
+      {
+        progress:   0.45,
+        waypointId: '#wp-subclavia',
+        label:      '② V. Subclavia → V. Braquiocefálica',
+        detail:     'Acceso directo sin rodear el brazo. Menor longitud de catéter.',
+      },
+      {
+        progress:   1.00,
+        waypointId: '#wp-vcs',
+        label:      '③ VCS — Posición Final ✓',
+        detail:     'Rx tórax postprocedimiento obligatoria. Descartar neumotórax.',
+      },
+    ],
+  },
+
+  'cvc-yugular': {
+    label:      'CVC Yugular',
+    routeId:    '#route-cvc-yugular',
+    color:      '#a855f7',
+    badgeCls:   'border-purple-500/60 text-purple-400',
+    stages: [
+      {
+        progress:   0.00,
+        waypointId: '#wp-cvc-yug',
+        label:      '① V. Yugular Interna Derecha',
+        detail:     'Triángulo posterior del ECM. Guía ecográfica recomendada.',
+      },
+      {
+        progress:   0.48,
+        waypointId: '#wp-subclavia',
+        label:      '② Unión Yugulo-Subclavia',
+        detail:     'El catéter desciende por el cuello. Ruta casi recta hacia el mediastino.',
+      },
+      {
+        progress:   1.00,
+        waypointId: '#wp-vcs',
+        label:      '③ VCS — Unión Cavoatrial ✓',
+        detail:     'Ruta más directa al VCS. Menor riesgo de malposición que vía subclavia.',
+      },
+    ],
+  },
+
+  midline: {
+    label:      'Midline',
+    routeId:    '#route-midline',
+    color:      '#06b6d4',
+    badgeCls:   'border-cyan-500/60 text-cyan-400',
+    stages: [
+      {
+        progress:   0.00,
+        waypointId: '#wp-insert',
+        label:      '① Inserción — Fosa antecubital',
+        detail:     'Misma zona que PICC. V. Basílica o Cefálica. Longitud máx. 20 cm.',
+      },
+      {
+        progress:   0.55,
+        waypointId: null,
+        label:      '② V. Basílica / Cefálica',
+        detail:     'Avance por el brazo superior. El catéter NO llega a la clavícula.',
+      },
+      {
+        progress:   1.00,
+        waypointId: '#wp-midline-limit',
+        label:      '⚠ LÍMITE — Vena Axilar (NO central)',
+        detail:     'La punta se detiene aquí. Contraindicado para NPT, osmol >600 mOsm/L o quimioterapia vesicante.',
+      },
+    ],
+  },
+} as const;
+
+type DeviceKey = keyof typeof DEVICES;
+
+// ────────────────────────────────────────────────────────────────────
+// ESTADO
+// ────────────────────────────────────────────────────────────────────
+let currentDevice: DeviceKey = 'picc';
+let currentTrigger: ScrollTrigger | null = null;
+let lastStageIndex = -1;
+
+// ────────────────────────────────────────────────────────────────────
+// HELPERS
+// ────────────────────────────────────────────────────────────────────
+
+/** Prepara un path SVG para la técnica strokeDashoffset */
+function preparePath(el: SVGPathElement): number {
+  const len = el.getTotalLength();
+  gsap.set(el, {
+    strokeDasharray:  len,
+    strokeDashoffset: len,   // 0% dibujado
+    opacity: 1,
+  });
+  return len;
+}
+
+/** Resetea todos los paths a invisible */
+function hideAllRoutes() {
+  const ids = ['#route-picc','#route-cvc-subclavio','#route-cvc-yugular','#route-midline'];
+  ids.forEach(id => {
+    const el = document.querySelector<SVGPathElement>(id);
+    if (!el) return;
+    const len = el.getTotalLength();
+    gsap.set(el, { strokeDashoffset: len, opacity: 0 });
+  });
+  gsap.set('#waypoints', { opacity: 0 });
+  gsap.set('.wp-dot', { opacity: 0, scale: 0.3, transformOrigin: '50% 50%' });
+  gsap.set('#anatomy-labels', { opacity: 0 });
+  gsap.set('#cavoatrial-dest', { opacity: 0 });
+}
+
+/** Actualiza el panel de etapa según el progreso del scroll */
+function updateStagePanel(device: DeviceKey, progress: number) {
+  const stages = DEVICES[device].stages;
+  let idx = 0;
+  for (let i = stages.length - 1; i >= 0; i--) {
+    if (progress >= stages[i].progress) { idx = i; break; }
+  }
+  if (idx === lastStageIndex) return;
+  lastStageIndex = idx;
+
+  const stage = stages[idx];
+  const label  = document.getElementById('stage-label');
+  const detail = document.getElementById('stage-detail');
+  if (label)  { label.textContent  = stage.label; }
+  if (detail) { detail.textContent = stage.detail; }
+
+  // Resaltar el waypoint correspondiente
+  if (stage.waypointId) {
+    const wp = document.querySelector<SVGElement>(stage.waypointId);
+    if (wp) {
+      gsap.set('#waypoints', { opacity: 1 });
+      gsap.fromTo(wp,
+        { opacity: 0, scale: 0.3, transformOrigin: '50% 50%' },
+        { opacity: 1, scale: 1,   transformOrigin: '50% 50%', duration: 0.35, ease: 'back.out(1.7)' }
+      );
+    }
+  }
+}
+
+// ────────────────────────────────────────────────────────────────────
+// ANIMACIÓN PRINCIPAL POR SCROLL
+// ────────────────────────────────────────────────────────────────────
+
+function initAnimation(device: DeviceKey) {
+  if (currentTrigger) {
+    currentTrigger.kill();
+    currentTrigger = null;
+  }
+  lastStageIndex = -1;
+
+  const config = DEVICES[device];
+  const section = document.getElementById('vascular-map-section');
+  if (!section) return;
+
+  hideAllRoutes();
+
+  // Actualizar badge del dispositivo
+  const badge = document.getElementById('device-badge');
+  if (badge) {
+    // Quitar clases de color anteriores
+    badge.className = badge.className
+      .replace(/border-\S+/g, '')
+      .replace(/text-\S+/g, '');
+    badge.classList.add(...config.badgeCls.split(' '));
+    badge.textContent = config.label;
+  }
+
+  // Preparar el path del dispositivo activo
+  const pathEl = document.querySelector<SVGPathElement>(config.routeId);
+  if (!pathEl) {
+    console.warn('No se encontró el path:', config.routeId);
+    return;
+  }
+  const totalLen = preparePath(pathEl);
+
+  // ── ScrollTrigger: el SVG se fija mientras se anima ──────────────
+  // pin: el SVG queda estático; el usuario scrollea para "avanzar" el catéter
+  const trigger = ScrollTrigger.create({
+    trigger:    '#animacion',          // la sección que contiene el SVG
+    start:      'top 12%',
+    end:        'bottom 12%',
+    scrub:      1.0,                   // suavidad: 1s de inercia
+    pin:        '#svg-container',      // fija solo el SVG, no el panel lateral
+    pinSpacing: false,
+
+    onUpdate(self) {
+      const p = self.progress;
+
+      // ── Core: dibujar el catéter según el scroll ──────────────────
+      // strokeDashoffset desciende de totalLen→0 (se "dibuja")
+      // Al retroceder el scroll, sube de 0→totalLen (se "retira")
+      const offset = totalLen * (1 - p);
+      pathEl.style.strokeDashoffset = String(offset);
+
+      // ── Mostrar etiquetas al 15% ──────────────────────────────────
+      if (p > 0.15) {
+        gsap.to('#anatomy-labels', { opacity: 1, duration: 0.4 });
+      } else {
+        gsap.to('#anatomy-labels', { opacity: 0, duration: 0.2 });
+      }
+
+      // ── Pulso final en destino cavoatrial ─────────────────────────
+      if (p > 0.95) {
+        gsap.to('#cavoatrial-dest', { opacity: 1, duration: 0.3 });
+      } else {
+        gsap.set('#cavoatrial-dest', { opacity: 0 });
+      }
+
+      // ── Actualizar panel de etapa ─────────────────────────────────
+      updateStagePanel(device, p);
+    },
+
+    onLeave() {
+      // Al llegar al final: catéter completamente dibujado
+      pathEl.style.strokeDashoffset = '0';
+    },
+
+    onEnterBack() {
+      // Al volver desde abajo: re-activar animación
+    },
+  });
+
+  currentTrigger = trigger;
+}
+
+// ────────────────────────────────────────────────────────────────────
+// INICIALIZACIÓN
+// ────────────────────────────────────────────────────────────────────
+function init() {
+  initAnimation(currentDevice);
+
+  // Escuchar cambio de dispositivo desde DeviceSelector
+  document.addEventListener('device-change', (e: Event) => {
+    const { device } = (e as CustomEvent<{ device: DeviceKey }>).detail;
+    if (device === currentDevice) return;
+    currentDevice = device;
+    initAnimation(device);
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>

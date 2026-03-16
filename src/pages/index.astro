@@ -1,0 +1,957 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BentoGrid from '../components/BentoGrid.astro';
+import '../styles/global.css';
+---
+
+<BaseLayout>
+
+<!-- ════════════════════════════════════════════════════════════════
+     1. HERO — Editorial, tipografía serif, autoridad clínica
+════════════════════════════════════════════════════════════════ -->
+<section id="hero" class="hero-bg min-h-screen flex flex-col justify-center pt-20">
+  <div class="container-section py-16 sm:py-24">
+
+    <div class="max-w-3xl">
+
+      <!-- Eyebrow -->
+      <div id="hero-eyebrow" class="mb-8">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-px" style="background: var(--accent);"></div>
+          <span class="text-[10px] sm:text-[11px] font-semibold tracking-[0.25em] uppercase" style="color: var(--accent);">
+            Educación Clínica
+          </span>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <h1 id="hero-title" class="text-[2.5rem] sm:text-[3.5rem] lg:text-[4.25rem] leading-[1.08] tracking-tight mb-8"
+          style="font-family: var(--font-display);">
+        <span class="text-white">Dispositivos de</span><br/>
+        <span style="color: var(--accent-2);">
+          <em>Acceso Vascular</em>
+        </span>
+      </h1>
+
+      <!-- Description -->
+      <p id="hero-desc" class="text-base sm:text-lg leading-relaxed mb-10 max-w-xl" style="color: var(--muted);">
+        Guía clínica rápida para personal de enfermería y medicina.
+        Selección del dispositivo correcto, recorrido anatómico y seguridad en la inserción.
+      </p>
+
+      <!-- Device pills -->
+      <div id="hero-pills" class="flex flex-wrap gap-3 mb-16">
+        <a href="#fichas" data-target="picc"
+           class="badge badge-picc px-4 py-2.5 text-[12px] hover:scale-[1.03] transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-emerald-500/10">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          PICC
+        </a>
+        <a href="#fichas" data-target="cvc-subclavio"
+           class="badge badge-cvc-sub px-4 py-2.5 text-[12px] hover:scale-[1.03] transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-orange-500/10">
+          <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+          CVC Subclavio
+        </a>
+        <a href="#fichas" data-target="cvc-yugular"
+           class="badge badge-cvc-yug px-4 py-2.5 text-[12px] hover:scale-[1.03] transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-violet-500/10">
+          <span class="w-1.5 h-1.5 rounded-full bg-violet-500"></span>
+          CVC Yugular
+        </a>
+        <a href="#fichas" data-target="midline"
+           class="badge badge-midline px-4 py-2.5 text-[12px] hover:scale-[1.03] transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-cyan-500/10">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>
+          Midline
+        </a>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div id="hero-scroll" class="flex items-center gap-4" style="color: var(--subtle);">
+        <div class="w-5 h-9 border rounded-full flex items-start justify-center pt-2" style="border-color: var(--border-2);">
+          <div id="scroll-dot" class="w-1 h-1 rounded-full" style="background: var(--accent);"></div>
+        </div>
+        <span class="text-[11px] tracking-wider uppercase">Explorar guía</span>
+      </div>
+
+    </div>
+
+    <!-- Decorative line on the right -->
+    <div class="hidden lg:block absolute right-16 top-1/2 -translate-y-1/2 w-px h-48 opacity-20"
+         style="background: linear-gradient(to bottom, transparent, var(--accent), transparent);"></div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     2. REFERENCIA RÁPIDA — Selección en 5 segundos
+════════════════════════════════════════════════════════════════ -->
+<section id="referencia" class="section-alt" style="padding: var(--section-py) 0;">
+  <div class="container-section">
+
+    <div class="text-center mb-14 reveal">
+      <p class="section-label">Referencia rápida</p>
+      <div class="section-divider"></div>
+      <h2 class="section-title">¿Qué dispositivo <em>necesito</em>?</h2>
+      <p class="section-subtitle mx-auto">
+        Diseñado para consultas en menos de 5 segundos durante un turno.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+      <!-- NPT / Quimio -->
+      <div class="qref-card reveal">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-9 h-9 rounded-xl flex items-center justify-center text-sm"
+                style="background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.12);">🧪</span>
+          <span class="text-[10px] font-semibold uppercase tracking-[0.2em]" style="color: var(--muted);">NPT / Quimio</span>
+        </div>
+        <p class="text-[15px] font-bold text-white mb-1.5" style="font-family: var(--font-display);">PICC o CVC</p>
+        <p class="text-xs leading-relaxed" style="color: var(--muted);">Requiere catéter central. Punta en VCS para dilución adecuada.</p>
+        <div class="mt-4 flex gap-1.5">
+          <span class="ind-pill yes">PICC</span>
+          <span class="ind-pill yes">CVC</span>
+          <span class="ind-pill no">Midline</span>
+        </div>
+      </div>
+
+      <!-- Antibioterapia -->
+      <div class="qref-card reveal">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-9 h-9 rounded-xl flex items-center justify-center text-sm"
+                style="background: rgba(34,211,238,0.08); border: 1px solid rgba(34,211,238,0.12);">💊</span>
+          <span class="text-[10px] font-semibold uppercase tracking-[0.2em]" style="color: var(--muted);">Antibioterapia IV</span>
+        </div>
+        <p class="text-[15px] font-bold text-white mb-1.5" style="font-family: var(--font-display);">Midline o PICC</p>
+        <p class="text-xs leading-relaxed" style="color: var(--muted);">Si pH 5–9 y duración &lt;4 semanas: Midline es suficiente.</p>
+        <div class="mt-4 flex gap-1.5">
+          <span class="ind-pill yes">Midline</span>
+          <span class="ind-pill yes">PICC</span>
+        </div>
+      </div>
+
+      <!-- Urgencia / UCI -->
+      <div class="qref-card reveal">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-9 h-9 rounded-xl flex items-center justify-center text-sm"
+                style="background: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.12);">🚨</span>
+          <span class="text-[10px] font-semibold uppercase tracking-[0.2em]" style="color: var(--muted);">Urgencia / UCI</span>
+        </div>
+        <p class="text-[15px] font-bold text-white mb-1.5" style="font-family: var(--font-display);">CVC Yugular o Subclavio</p>
+        <p class="text-xs leading-relaxed" style="color: var(--muted);">Acceso rápido, ruta corta a VCS. Guía ecográfica si disponible.</p>
+        <div class="mt-4 flex gap-1.5">
+          <span class="ind-pill yes">CVC Yug</span>
+          <span class="ind-pill yes">CVC Sub</span>
+        </div>
+      </div>
+
+      <!-- Hidratación / Analgesia -->
+      <div class="qref-card reveal">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-9 h-9 rounded-xl flex items-center justify-center text-sm"
+                style="background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.12);">💧</span>
+          <span class="text-[10px] font-semibold uppercase tracking-[0.2em]" style="color: var(--muted);">Hidratación</span>
+        </div>
+        <p class="text-[15px] font-bold text-white mb-1.5" style="font-family: var(--font-display);">Midline</p>
+        <p class="text-xs leading-relaxed" style="color: var(--muted);">Si fármacos con pH 5–9 y osmol &lt;600. Evitar acceso central innecesario.</p>
+        <div class="mt-4 flex gap-1.5">
+          <span class="ind-pill yes">Midline</span>
+          <span class="ind-pill yes">PICC</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     3. BENTO GRID — Comparación interactiva
+════════════════════════════════════════════════════════════════ -->
+<section id="dispositivos" style="padding: var(--section-py) 0;">
+  <div class="container-section">
+
+    <div class="text-center mb-14 reveal">
+      <p class="section-label">Dispositivos</p>
+      <div class="section-divider"></div>
+      <h2 class="section-title">Comparación de <em>Accesos Vasculares</em></h2>
+      <p class="section-subtitle mx-auto">
+        Datos técnicos clave para seleccionar el dispositivo adecuado según la terapia y el paciente.
+      </p>
+    </div>
+
+    <BentoGrid />
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     4. FICHAS TÉCNICAS — Acordeón expandible
+════════════════════════════════════════════════════════════════ -->
+<section id="fichas" class="section-alt" style="padding: var(--section-py) 0;">
+  <div class="container-section">
+
+    <div class="text-center mb-14 reveal">
+      <p class="section-label">Fichas Técnicas</p>
+      <div class="section-divider"></div>
+      <h2 class="section-title">Especificaciones <em>Clínicas</em></h2>
+      <p class="section-subtitle mx-auto">Haz clic en cada dispositivo para ver la ficha completa.</p>
+    </div>
+
+    <div class="space-y-4 max-w-5xl mx-auto" id="accordion-group">
+
+      <!-- PICC -->
+      <div class="accordion-item reveal" data-accordion="picc">
+        <button class="accordion-trigger group" aria-expanded="true">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+                 style="background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.15);">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            </div>
+            <div class="text-left">
+              <p class="text-[10px] text-emerald-400 font-semibold uppercase tracking-[0.2em] mb-0.5">PICC</p>
+              <p class="text-white font-semibold text-[15px]">Catéter Central de Inserción Periférica</p>
+            </div>
+          </div>
+          <svg class="accordion-icon w-5 h-5 transition-transform duration-300 rotate-180 shrink-0" style="color: var(--muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div class="accordion-content">
+          <div class="px-6 pb-6">
+            <div class="h-px mb-6" style="background: var(--border);"></div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <!-- Especificaciones -->
+              <div>
+                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style="color: var(--subtle);">Especificaciones</p>
+                <dl class="space-y-3">
+                  {[
+                    ['Longitud', '45–65 cm'],
+                    ['Calibre', '3–6 Fr (1–3 lúmenes)'],
+                    ['Punto inserción', 'Fosa antecubital (v. basílica)'],
+                    ['Posición punta', 'VCS / Unión cavoatrial'],
+                    ['Duración', 'Semanas–meses'],
+                    ['Verificación pos.', 'ECG intravascular o Rx tórax'],
+                  ].map(([k, v]) => (
+                    <div class="flex justify-between gap-4 text-sm pb-2.5" style="border-bottom: 1px solid var(--border);">
+                      <dt style="color: var(--muted);">{k}</dt>
+                      <dd class="text-white text-right font-medium">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+              <!-- Indicaciones -->
+              <div>
+                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style="color: var(--subtle);">Indicaciones</p>
+                <ul class="space-y-2 text-sm">
+                  {[
+                    'Quimioterapia (todos los esquemas)',
+                    'Nutrición parenteral total (NPT)',
+                    'Antibioterapia IV prolongada (&gt;7 días)',
+                    'Hemoderivados',
+                    'Fármacos con pH &lt;5 o &gt;9',
+                    'Medicación hiperosmolar (&gt;600 mOsm/L)',
+                  ].map(i => (
+                    <li class="flex gap-2.5" style="color: var(--muted);">
+                      <span class="text-emerald-400 font-bold shrink-0">✓</span>
+                      <span set:html={i}></span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <!-- Recorrido + Seguridad -->
+              <div class="space-y-5">
+                <div>
+                  <p class="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style="color: var(--subtle);">Recorrido anatómico</p>
+                  <ol class="space-y-2 text-sm" style="color: var(--muted);">
+                    <li class="flex gap-2"><span class="text-emerald-400 font-bold shrink-0">1.</span> Fosa antecubital (v. basílica preferida)</li>
+                    <li class="flex gap-2"><span class="text-emerald-400 font-bold shrink-0">2.</span> Vena axilar</li>
+                    <li class="flex gap-2"><span class="text-emerald-400 font-bold shrink-0">3.</span> Vena subclavia (cruza bajo clavícula)</li>
+                    <li class="flex gap-2"><span class="text-emerald-400 font-bold shrink-0">4.</span> Vena braquiocefálica</li>
+                    <li class="flex gap-2"><span class="text-emerald-500 font-bold shrink-0">5.</span> <strong class="text-emerald-400">VCS / Unión cavoatrial</strong></li>
+                  </ol>
+                </div>
+                <div class="alert alert-warn text-xs">
+                  <span class="shrink-0">⚠</span>
+                  <div>
+                    <strong class="text-amber-400">Punta NO en aurícula derecha</strong><br/>
+                    <span style="color: var(--muted);">Riesgo de arritmias. Retirar 2–3 cm si se observa en Rx.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CVC Subclavio -->
+      <div class="accordion-item reveal" data-accordion="cvc-subclavio">
+        <button class="accordion-trigger group" aria-expanded="false">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+                 style="background: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.15);">
+              <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+            </div>
+            <div class="text-left">
+              <p class="text-[10px] text-orange-400 font-semibold uppercase tracking-[0.2em] mb-0.5">CVC Subclavio</p>
+              <p class="text-white font-semibold text-[15px]">Catéter Venoso Central — Abordaje Subclavio</p>
+            </div>
+          </div>
+          <svg class="accordion-icon w-5 h-5 transition-transform duration-300 shrink-0" style="color: var(--muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div class="accordion-content">
+          <div class="px-6 pb-6">
+            <div class="h-px mb-6" style="background: var(--border);"></div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div>
+                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style="color: var(--subtle);">Especificaciones</p>
+                <dl class="space-y-3">
+                  {[
+                    ['Longitud', '15–20 cm'],
+                    ['Calibre', '7–8.5 Fr (multilumen)'],
+                    ['Punto inserción', '1/3 medio clavícula (infra)'],
+                    ['Posición punta', 'VCS tercio inferior'],
+                    ['Verificación', 'Rx tórax obligatoria'],
+                    ['Complicación prin.', 'Neumotórax (~2%)'],
+                  ].map(([k, v]) => (
+                    <div class="flex justify-between gap-4 text-sm pb-2.5" style="border-bottom: 1px solid var(--border);">
+                      <dt style="color: var(--muted);">{k}</dt>
+                      <dd class="text-white text-right font-medium">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+              <div>
+                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style="color: var(--subtle);">Recorrido</p>
+                <ol class="space-y-2 text-sm mb-5" style="color: var(--muted);">
+                  <li class="flex gap-2"><span class="text-orange-400 font-bold shrink-0">1.</span> Punción infraclavicular 1/3 medio, ángulo 15–30°</li>
+                  <li class="flex gap-2"><span class="text-orange-400 font-bold shrink-0">2.</span> Entrada directa a vena subclavia</li>
+                  <li class="flex gap-2"><span class="text-orange-400 font-bold shrink-0">3.</span> Vena braquiocefálica derecha</li>
+                  <li class="flex gap-2"><span class="text-orange-500 font-bold shrink-0">4.</span> <strong class="text-orange-400">VCS tercio inferior</strong></li>
+                </ol>
+                <div class="alert alert-info text-xs">
+                  <span class="text-blue-400 shrink-0">✦</span>
+                  <span style="color: var(--muted);">Ventaja: menor desplazamiento del catéter con movimientos del paciente.</span>
+                </div>
+              </div>
+              <div>
+                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style="color: var(--subtle);">Complicaciones</p>
+                <ul class="space-y-2.5 text-sm">
+                  {[
+                    ['Neumotórax', '~2%', 'amber'],
+                    ['Hemotórax', 'Raro', 'red'],
+                    ['Malposición', 'Yugular, homolateral', 'amber'],
+                    ['Síndrome pinch-off', 'Compresión costo-clavicular', 'amber'],
+                    ['Trombosis', 'PICC > subclavio', 'blue'],
+                  ].map(([c, freq, color]) => (
+                    <li class="flex items-start gap-2.5">
+                      <span class={`text-${color}-400 font-bold shrink-0 mt-0.5`}>!</span>
+                      <div>
+                        <span class="text-white font-medium">{c}</span>
+                        <span class="text-xs ml-1.5" style="color: var(--muted);">{freq}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CVC Yugular -->
+      <div class="accordion-item reveal" data-accordion="cvc-yugular">
+        <button class="accordion-trigger group" aria-expanded="false">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+                 style="background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.15);">
+              <span class="w-2.5 h-2.5 rounded-full bg-violet-500"></span>
+            </div>
+            <div class="text-left">
+              <p class="text-[10px] text-violet-400 font-semibold uppercase tracking-[0.2em] mb-0.5">CVC Yugular</p>
+              <p class="text-white font-semibold text-[15px]">Catéter Venoso Central — Abordaje Yugular Interno</p>
+            </div>
+          </div>
+          <svg class="accordion-icon w-5 h-5 transition-transform duration-300 shrink-0" style="color: var(--muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div class="accordion-content">
+          <div class="px-6 pb-6">
+            <div class="h-px mb-6" style="background: var(--border);"></div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div>
+                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style="color: var(--subtle);">Especificaciones</p>
+                <dl class="space-y-3">
+                  {[
+                    ['Longitud derecho', '12–15 cm'],
+                    ['Longitud izquierdo', '15–20 cm'],
+                    ['Calibre', '7–8.5 Fr'],
+                    ['Inserción', 'Triángulo del ECM'],
+                    ['Posición punta', 'VCS tercio inferior'],
+                    ['Guía recomendada', 'Ultrasonido (reduce comp. 70%)'],
+                  ].map(([k, v]) => (
+                    <div class="flex justify-between gap-4 text-sm pb-2.5" style="border-bottom: 1px solid var(--border);">
+                      <dt style="color: var(--muted);">{k}</dt>
+                      <dd class="text-white text-right font-medium">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+              <div>
+                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style="color: var(--subtle);">Recorrido (vía derecha)</p>
+                <ol class="space-y-2 text-sm mb-5" style="color: var(--muted);">
+                  <li class="flex gap-2"><span class="text-violet-400 font-bold shrink-0">1.</span> Punción en ángulo del triángulo ECM</li>
+                  <li class="flex gap-2"><span class="text-violet-400 font-bold shrink-0">2.</span> Descenso por yugular interna derecha</li>
+                  <li class="flex gap-2"><span class="text-violet-400 font-bold shrink-0">3.</span> Unión yugulo-subclavia → braquiocefálica</li>
+                  <li class="flex gap-2"><span class="text-violet-500 font-bold shrink-0">4.</span> <strong class="text-violet-400">VCS — ruta casi recta</strong></li>
+                </ol>
+                <div class="alert alert-success text-xs">
+                  <span class="text-emerald-400 shrink-0">✓</span>
+                  <span style="color: var(--muted);">La vía derecha ofrece trayecto casi recto a VCS, reduciendo riesgo de malposición.</span>
+                </div>
+              </div>
+              <div>
+                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style="color: var(--subtle);">Puntos de seguridad</p>
+                <ul class="space-y-2.5 text-sm" style="color: var(--muted);">
+                  <li class="flex gap-2"><span class="text-violet-400 shrink-0">→</span> Guía ecográfica reduce riesgo de punción carotídea</li>
+                  <li class="flex gap-2"><span class="text-violet-400 shrink-0">→</span> Verificar reflejo venoso (pulsación oscura vs arteria brillante)</li>
+                  <li class="flex gap-2"><span class="text-violet-400 shrink-0">→</span> Rx tórax postprocedimiento para confirmar posición</li>
+                  <li class="flex gap-2"><span class="text-amber-400 shrink-0">!</span> Riesgo de punción carotídea: 0.5–1%</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Midline -->
+      <div class="accordion-item reveal" data-accordion="midline">
+        <button class="accordion-trigger group" aria-expanded="false">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+                 style="background: rgba(34,211,238,0.08); border: 1px solid rgba(34,211,238,0.15);">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span>
+            </div>
+            <div class="text-left">
+              <p class="text-[10px] text-cyan-400 font-semibold uppercase tracking-[0.2em] mb-0.5">Midline</p>
+              <p class="text-white font-semibold text-[15px]">Catéter de Línea Media — NO es catéter central</p>
+            </div>
+          </div>
+          <svg class="accordion-icon w-5 h-5 transition-transform duration-300 shrink-0" style="color: var(--muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div class="accordion-content">
+          <div class="px-6 pb-6">
+            <div class="h-px mb-6" style="background: var(--border);"></div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div>
+                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style="color: var(--subtle);">Especificaciones</p>
+                <dl class="space-y-3">
+                  {[
+                    ['Longitud', '8–20 cm'],
+                    ['Calibre', '3–5 Fr'],
+                    ['Inserción', 'Fosa antecubital'],
+                    ['Posición punta', 'Vena axilar (NO central)'],
+                    ['Duración', '1–4 semanas'],
+                    ['pH tolerado', '5–9'],
+                    ['Osmolaridad', '< 600 mOsm/L'],
+                  ].map(([k, v]) => (
+                    <div class="flex justify-between gap-4 text-sm pb-2.5" style="border-bottom: 1px solid var(--border);">
+                      <dt style="color: var(--muted);">{k}</dt>
+                      <dd class="text-white text-right font-medium" set:html={v}></dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+              <div>
+                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] mb-4" style="color: var(--subtle);">Indicaciones</p>
+                <ul class="space-y-2 text-sm mb-5">
+                  {[
+                    ['Antibioterapia IV (pH 5–9)', true],
+                    ['Hidratación IV prolongada', true],
+                    ['Analgesia IV (morfina, etc.)', true],
+                    ['Nutrición parenteral total', false],
+                    ['Quimioterapia vesicante', false],
+                    ['Osmolaridad >600 mOsm/L', false],
+                    ['Fármacos vasoactivos concentrados', false],
+                  ].map(([text, ok]) => (
+                    <li class="flex gap-2.5" style="color: var(--muted);">
+                      <span class={ok ? 'text-emerald-400 font-bold shrink-0' : 'text-red-400 font-bold shrink-0'}>
+                        {ok ? '✓' : '✗'}
+                      </span>
+                      <span set:html={text}></span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <div class="alert alert-warn mb-5">
+                  <span class="text-amber-400 shrink-0 text-base">⚠</span>
+                  <div class="text-xs">
+                    <strong class="text-amber-400 block mb-1.5">Distinción crítica</strong>
+                    <span style="color: var(--muted);">La punta se detiene en la <strong class="text-white">vena axilar</strong>. No alcanza la VCS. El flujo sanguíneo es menor → sin capacidad de diluir fármacos hiperosmolares o irritantes.</span>
+                  </div>
+                </div>
+                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] mb-2" style="color: var(--subtle);">Ventaja principal</p>
+                <p class="text-sm" style="color: var(--muted);">Evita la inserción central cuando no es necesaria, reduciendo el riesgo de infecciones del torrente sanguíneo (ITSRC).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     5. PROCEDIMIENTO PICC — Paso a paso
+════════════════════════════════════════════════════════════════ -->
+<section id="procedimiento" style="padding: var(--section-py) 0;">
+  <div class="container-section">
+
+    <div class="text-center mb-14 reveal">
+      <p class="section-label">Procedimiento</p>
+      <div class="section-divider"></div>
+      <h2 class="section-title">Inserción de PICC — <em>Paso a Paso</em></h2>
+      <p class="section-subtitle mx-auto">
+        Basado en guías INS 2021 y CDC. Técnica aséptica máxima en todos los pasos.
+      </p>
+    </div>
+
+    <div class="max-w-3xl mx-auto">
+      <div class="space-y-1" id="steps-list">
+
+        {[
+          {
+            n: '01', color: 'bg-blue-600/20 text-blue-400',
+            title: 'Evaluar la indicación y el paciente',
+            detail: 'Verificar terapia prescrita, duración estimada y acceso venoso periférico. Revisar criterios de exclusión (trombosis, linfedema, AV fístula ipsilateral).',
+            tag: 'Evaluación',
+          },
+          {
+            n: '02', color: 'bg-emerald-600/20 text-emerald-400',
+            title: 'Consentimiento informado',
+            detail: 'Explicar el procedimiento, beneficios y riesgos al paciente. Verificar alergias al látex, yodo, clorhexidina.',
+            tag: 'Prerrequisito',
+          },
+          {
+            n: '03', color: 'bg-cyan-600/20 text-cyan-400',
+            title: 'Selección y medición del catéter',
+            detail: 'Medir externamente: punto de inserción → lóbulo oreja derecha → 3° espacio intercostal derecho. Seleccionar longitud (45–65 cm típico). Elegir calibre según terapia.',
+            tag: 'Planificación',
+          },
+          {
+            n: '04', color: 'bg-violet-600/20 text-violet-400',
+            title: 'Posición del paciente',
+            detail: 'Decúbito supino. Brazo en abducción 90° respecto al tórax. Cabeza girada hacia el lado de inserción para facilitar el acceso y la medición.',
+            tag: 'Posición',
+          },
+          {
+            n: '05', color: 'bg-amber-600/20 text-amber-400',
+            title: 'Técnica aséptica máxima (TAM)',
+            detail: 'Higiene de manos 6 pasos. Bata estéril, guantes estériles, mascarilla, gorro, campo estéril amplio. Desinfección de piel con clorhexidina al 2% en alcohol (x2, dejar secar 30 seg).',
+            tag: 'Seguridad',
+            highlight: true,
+          },
+          {
+            n: '06', color: 'bg-blue-600/20 text-blue-400',
+            title: 'Localización venosa guiada por ultrasonido',
+            detail: 'Identificar vena basílica (preferida), cefálica o braquial. La basílica ofrece mejor calibre y trayecto más recto. Visualizar en eje corto y largo.',
+            tag: 'Ultrasonido',
+          },
+          {
+            n: '07', color: 'bg-cyan-600/20 text-cyan-400',
+            title: 'Punción y técnica Seldinger modificada',
+            detail: 'Punción con aguja introductora 21G bajo guía ecográfica. Insertar guía metálica. Hacer microcorte cutáneo. Colocar dilatador. Introducir catéter PICC a la longitud calculada.',
+            tag: 'Técnica',
+          },
+          {
+            n: '08', color: 'bg-orange-600/20 text-orange-400',
+            title: 'Verificar retroceso de sangre y permeabilidad',
+            detail: 'Aspirar en cada lumen para confirmar flujo sanguíneo. Lavar con SF 10 mL a presión pulsátil. Verificar ausencia de resistencia o edema local.',
+            tag: 'Verificación',
+          },
+          {
+            n: '09', color: 'bg-red-600/20 text-red-400',
+            title: 'Confirmar posición de la punta',
+            detail: 'Opción 1 (preferida): ECG intravascular — confirmar onda P máxima en posición cavoatrial, luego retirar 1–2 cm. Opción 2: Rx tórax — punta en VCS tercio inferior, por encima del botón de la AD.',
+            tag: 'Confirmación',
+            highlight: true,
+          },
+          {
+            n: '10', color: 'bg-emerald-600/20 text-emerald-400',
+            title: 'Fijación y apósito',
+            detail: 'Usar sistema de sujeción sin sutura (StatLock® o similar). Apósito transparente semipermeable. Fecha y hora de inserción. Nunca usar gasas bajo el apósito como norma.',
+            tag: 'Fijación',
+          },
+          {
+            n: '11', color: 'bg-blue-600/20 text-blue-400',
+            title: 'Documentación completa',
+            detail: 'Registrar: fecha/hora, vena utilizada, longitud externa e interna, calibre y lúmenes, método de verificación de posición, incidencias, responsable del procedimiento.',
+            tag: 'Registro',
+          },
+        ].map((step, i) => (
+          <div class="step-item relative pl-16 pb-8 step-reveal"
+               style={`opacity:0; transform: translateX(-24px);`}>
+            {i < 10 && (
+              <div class="absolute left-[19px] top-10 bottom-0 w-px" style="background: var(--border);"></div>
+            )}
+            <div class={`step-num ${step.color} absolute left-0 top-0`}
+                 style="font-family: var(--font-display);">{step.n}</div>
+            <div class={`card p-5 ${step.highlight ? 'ring-1 ring-amber-500/15' : ''}`}
+                 style={step.highlight ? 'background: linear-gradient(135deg, rgba(251,191,36,0.03), transparent);' : ''}>
+              <div class="flex items-center gap-2.5 mb-2">
+                <h3 class="text-sm font-semibold text-white">{step.title}</h3>
+                <span class="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                      style="background: var(--surface-2); color: var(--muted); border: 1px solid var(--border);">{step.tag}</span>
+              </div>
+              <p class="text-xs leading-relaxed" style="color: var(--muted);">{step.detail}</p>
+            </div>
+          </div>
+        ))}
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     6. TABLA COMPARATIVA
+════════════════════════════════════════════════════════════════ -->
+<section id="comparativa" class="section-alt" style="padding: var(--section-py) 0;">
+  <div class="container-section">
+
+    <div class="text-center mb-14 reveal">
+      <p class="section-label">Comparativa</p>
+      <div class="section-divider"></div>
+      <h2 class="section-title">Tabla Comparativa de <em>Dispositivos</em></h2>
+    </div>
+
+    <div class="reveal overflow-x-auto rounded-2xl border" style="border-color: var(--border-2);">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th class="rounded-tl-2xl" style="color: var(--muted);">Parámetro</th>
+            <th class="text-emerald-400">PICC</th>
+            <th class="text-orange-400">CVC Subclavio</th>
+            <th class="text-violet-400">CVC Yugular</th>
+            <th class="rounded-tr-2xl text-cyan-400">Midline</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            ['Inserción', 'Fosa antecubital', 'Infraclavicular', 'V. Yugular interna', 'Fosa antecubital'],
+            ['Punta', 'VCS / Cavoatrial', 'VCS tercio inf.', 'VCS tercio inf.', '⚠ V. Axilar'],
+            ['¿Central?', '✓ Sí', '✓ Sí', '✓ Sí', '✗ No'],
+            ['Longitud', '45–65 cm', '15–20 cm', '12–15 cm', '8–20 cm'],
+            ['Duración', 'Semanas–meses', 'Días–semanas', 'Días–semanas', '1–4 semanas'],
+            ['NPT', '✓', '✓', '✓', '✗ Contraindicado'],
+            ['Quimioterapia', '✓', '✓', '✓', '✗ Vesicante'],
+            ['Guía eco.', 'Recomendada', 'No estándar', 'Recomendada (gold)', 'Recomendada'],
+            ['Neumotórax', '—', '~2% riesgo', 'Riesgo bajo', '—'],
+            ['Trombosis', 'Menor que CVC', 'Riesgo medio', 'Riesgo medio', 'Riesgo bajo'],
+          ].map(([param, picc, sub, yug, mid]) => (
+            <tr>
+              <td class="font-medium text-white/80">{param}</td>
+              <td style="color: var(--muted);">{picc}</td>
+              <td style="color: var(--muted);">{sub}</td>
+              <td style="color: var(--muted);">{yug}</td>
+              <td class={mid.startsWith('✗') ? 'text-red-400' : ''} style={!mid.startsWith('✗') ? 'color: var(--muted);' : ''}>{mid}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════════
+     7. SEGURIDAD — Alertas clínicas clave
+════════════════════════════════════════════════════════════════ -->
+<section id="seguridad" style="padding: var(--section-py) 0;">
+  <div class="container-section">
+
+    <div class="text-center mb-14 reveal">
+      <p class="section-label" style="color: var(--warn);">Seguridad clínica</p>
+      <div class="section-divider" style="background: linear-gradient(90deg, transparent, var(--warn), transparent);"></div>
+      <h2 class="section-title">Alertas y Prevención de <em>Complicaciones</em></h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-5">
+
+      <!-- Posiciones incorrectas -->
+      <div class="card p-6 reveal" style="border-color: rgba(248,113,113,0.1);">
+        <h3 class="text-sm font-bold text-red-400 uppercase tracking-[0.15em] mb-5 flex items-center gap-3">
+          <span class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(248,113,113,0.3)]"></span>
+          Posiciones de punta incorrectas
+        </h3>
+        <ul class="space-y-4 text-sm">
+          {[
+            ['Aurícula derecha', 'Arritmias. Retirar hasta VCS tercio inferior.'],
+            ['Ventrículo derecho', 'Arritmias graves, perforación. Retirar de inmediato.'],
+            ['Vena yugular (malposición)', 'Sin flujo adecuado. Confirmación radiológica.'],
+            ['Vena subclavia contralateral', 'Malposición. No usar hasta reposición.'],
+          ].map(([pos, detail]) => (
+            <li class="flex gap-3">
+              <span class="text-red-400 font-bold shrink-0 mt-0.5">!</span>
+              <div>
+                <p class="font-medium text-white">{pos}</p>
+                <p class="text-xs mt-0.5" style="color: var(--muted);">{detail}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Prevención ITSRC -->
+      <div class="card p-6 reveal" style="border-color: rgba(251,191,36,0.1);">
+        <h3 class="text-sm font-bold text-amber-400 uppercase tracking-[0.15em] mb-5 flex items-center gap-3">
+          <span class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(251,191,36,0.3)]"></span>
+          Prevención de ITSRC
+        </h3>
+        <ul class="space-y-3 text-sm" style="color: var(--muted);">
+          {[
+            'Técnica aséptica máxima en inserción (bata, guantes, mascarilla, campo amplio)',
+            'Higiene de manos antes de manipular el catéter en cada turno',
+            'Cambio de apósito cada 7 días o si está húmedo/despegado',
+            'Desinfección del conector con alcohol o clorhexidina ≥15 seg antes de usar',
+            'Evaluar diariamente la necesidad del catéter — retirar si no está indicado',
+            'Bundle PICC: checklist de inserción + educación continua de enfermería',
+          ].map(item => (
+            <li class="flex gap-2.5">
+              <span class="text-amber-400 shrink-0 mt-1">·</span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Detección precoz -->
+      <div class="card p-6 reveal" style="border-color: rgba(96,165,250,0.1);">
+        <h3 class="text-sm font-bold text-blue-400 uppercase tracking-[0.15em] mb-5 flex items-center gap-3">
+          <span class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(96,165,250,0.3)]"></span>
+          Detección precoz de complicaciones
+        </h3>
+        <div class="space-y-4 text-sm">
+          {[
+            { sign: 'Fiebre + escalofríos sin otro foco', warn: 'Sospecha ITSRC → hemocultivos x2 + evaluar retiro', color: 'red' },
+            { sign: 'Dolor / edema ipsilateral', warn: 'Sospecha trombosis venosa → ecografía doppler', color: 'amber' },
+            { sign: 'Resistencia al flujo', warn: 'Obstrucción → no forzar, protocolo de uroquinasa', color: 'amber' },
+            { sign: 'Eritema / calor en el punto de inserción', warn: 'Infección local → cultura + evaluar cambio de sitio', color: 'red' },
+          ].map(({ sign, warn, color }) => (
+            <div class={`border-l-2 border-${color}-500/40 pl-4 py-0.5`}>
+              <p class="font-medium text-white text-xs">{sign}</p>
+              <p class={`text-xs text-${color}-400 mt-0.5`}>{warn}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Referencias -->
+      <div class="card p-6 reveal" style="border-color: rgba(52,211,153,0.1);">
+        <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-[0.15em] mb-5 flex items-center gap-3">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(52,211,153,0.3)]"></span>
+          Referencias de evidencia
+        </h3>
+        <ul class="space-y-2.5 text-xs" style="color: var(--muted);">
+          {[
+            'INS Standards of Practice 2021 — Infusion Nursing Society',
+            'CDC Guidelines for Prevention of CRBSI (2011, vigentes)',
+            'ESPEN Guidelines on Parenteral Nutrition 2019',
+            'NICE Evidence: Central venous catheters (2020)',
+            'Rev. Chilena de Infectología — Protocolos MINSAL',
+          ].map(ref => (
+            <li class="flex gap-2.5 items-start">
+              <span class="text-emerald-400/60 shrink-0 mt-px">›</span>
+              {ref}
+            </li>
+          ))}
+        </ul>
+        <div class="mt-5 pt-4" style="border-top: 1px solid var(--border);">
+          <p class="text-xs italic" style="color: var(--subtle);">
+            Este material es educativo. Para decisiones clínicas consultar los protocolos
+            institucionales del Hospital del Salvador vigentes.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+</BaseLayout>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     GSAP — Animaciones de scroll y micro-interacciones
+═══════════════════════════════════════════════════════════════ -->
+<script>
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+// ── Hero entrance ─────────────────────────────────────────────────
+const heroTl = gsap.timeline({ delay: 0.15 });
+heroTl
+  .from('#hero-eyebrow', { opacity: 0, x: -20, duration: 0.7, ease: 'power3.out' })
+  .from('#hero-title',   { opacity: 0, y: 40, duration: 0.9, ease: 'power3.out' }, '-=0.4')
+  .from('#hero-desc',    { opacity: 0, y: 24, duration: 0.7, ease: 'power3.out' }, '-=0.5')
+  .from('#hero-pills',   { opacity: 0, y: 20, duration: 0.6, ease: 'power3.out' }, '-=0.4')
+  .from('#hero-scroll',  { opacity: 0, y: 12, duration: 0.5, ease: 'power3.out' }, '-=0.3');
+
+// Scroll dot bounce
+gsap.to('#scroll-dot', {
+  y: 18, duration: 1.4, repeat: -1, yoyo: true, ease: 'power1.inOut',
+});
+
+// ── Generic .reveal sections ──────────────────────────────────────
+document.querySelectorAll<HTMLElement>('.reveal').forEach(el => {
+  gsap.to(el, {
+    opacity: 1,
+    y: 0,
+    duration: 0.75,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 88%',
+      once: true,
+    },
+  });
+});
+
+// ── Quick ref cards (stagger) ─────────────────────────────────────
+gsap.to('#referencia .qref-card', {
+  opacity: 1,
+  y: 0,
+  scale: 1,
+  duration: 0.6,
+  stagger: 0.1,
+  ease: 'power3.out',
+  scrollTrigger: {
+    trigger: '#referencia .qref-card',
+    start: 'top 88%',
+    once: true,
+  },
+});
+
+// ── Procedure steps (stagger cascade) ────────────────────────────
+gsap.to('.step-reveal', {
+  opacity: 1,
+  x: 0,
+  duration: 0.55,
+  stagger: 0.08,
+  ease: 'power3.out',
+  scrollTrigger: {
+    trigger: '#steps-list',
+    start: 'top 85%',
+    once: true,
+  },
+});
+
+// ── Security cards ──────────────────────────────────────────────
+gsap.to('#seguridad .card', {
+  opacity: 1,
+  y: 0,
+  duration: 0.6,
+  stagger: 0.1,
+  ease: 'power3.out',
+  scrollTrigger: {
+    trigger: '#seguridad',
+    start: 'top 85%',
+    once: true,
+  },
+});
+
+// ── Accordion logic with GSAP ─────────────────────────────────────
+const accordions = document.querySelectorAll<HTMLElement>('[data-accordion]');
+
+// Open first accordion by default
+const firstItem = document.querySelector('[data-accordion="picc"]');
+if (firstItem) {
+  const content = firstItem.querySelector<HTMLElement>('.accordion-content')!;
+  const icon    = firstItem.querySelector<SVGElement>('.accordion-icon')!;
+  gsap.set(content, { height: 'auto' });
+  gsap.set(icon, { rotate: 180 });
+}
+
+accordions.forEach(item => {
+  const trigger = item.querySelector<HTMLElement>('.accordion-trigger')!;
+  const content = item.querySelector<HTMLElement>('.accordion-content')!;
+  const icon    = item.querySelector<SVGElement>('.accordion-icon')!;
+  let isOpen = item.dataset.accordion === 'picc';
+
+  trigger.addEventListener('click', () => {
+    if (isOpen) {
+      gsap.to(content, { height: 0, duration: 0.4, ease: 'power2.inOut' });
+      gsap.to(icon, { rotate: 0, duration: 0.3, ease: 'power2.inOut' });
+      trigger.setAttribute('aria-expanded', 'false');
+      isOpen = false;
+    } else {
+      // Close all others
+      accordions.forEach(other => {
+        if (other === item) return;
+        const otherContent = other.querySelector<HTMLElement>('.accordion-content')!;
+        const otherIcon    = other.querySelector<SVGElement>('.accordion-icon')!;
+        const otherTrigger = other.querySelector<HTMLElement>('.accordion-trigger')!;
+        gsap.to(otherContent, { height: 0, duration: 0.3, ease: 'power2.inOut' });
+        gsap.to(otherIcon, { rotate: 0, duration: 0.25 });
+        otherTrigger.setAttribute('aria-expanded', 'false');
+        // @ts-ignore
+        other._accordionOpen = false;
+      });
+      gsap.fromTo(content,
+        { height: 0 },
+        { height: 'auto', duration: 0.5, ease: 'power3.out' }
+      );
+      gsap.to(icon, { rotate: 180, duration: 0.3, ease: 'power2.inOut' });
+      trigger.setAttribute('aria-expanded', 'true');
+      isOpen = true;
+    }
+  });
+});
+
+// ── Hero quick-jump pills → open corresponding accordion ─────────
+document.querySelectorAll<HTMLAnchorElement>('a[data-target]').forEach(a => {
+  a.addEventListener('click', () => {
+    const target = a.dataset.target!;
+    setTimeout(() => {
+      const item = document.querySelector<HTMLElement>(`[data-accordion="${target}"]`);
+      if (!item) return;
+      const trigger = item.querySelector<HTMLElement>('.accordion-trigger')!;
+      const content = item.querySelector<HTMLElement>('.accordion-content')!;
+      const icon    = item.querySelector<SVGElement>('.accordion-icon')!;
+      const currentHeight = content.offsetHeight;
+      if (currentHeight === 0) {
+        accordions.forEach(other => {
+          const oc = other.querySelector<HTMLElement>('.accordion-content')!;
+          const oi = other.querySelector<SVGElement>('.accordion-icon')!;
+          gsap.to(oc, { height: 0, duration: 0.25 });
+          gsap.to(oi, { rotate: 0, duration: 0.2 });
+          other.querySelector<HTMLElement>('.accordion-trigger')!.setAttribute('aria-expanded', 'false');
+        });
+        gsap.fromTo(content, { height: 0 }, { height: 'auto', duration: 0.5, ease: 'power3.out' });
+        gsap.to(icon, { rotate: 180, duration: 0.3 });
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+    }, 1000);
+  });
+});
+
+// ── Parallax on section titles ─────────────────────────────────────
+document.querySelectorAll<HTMLElement>('.section-title').forEach(el => {
+  gsap.to(el, {
+    yPercent: -8,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: el.closest('section'),
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true,
+    },
+  });
+});
+</script>

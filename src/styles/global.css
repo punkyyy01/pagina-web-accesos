@@ -1,0 +1,385 @@
+@import "tailwindcss";
+
+/* ── Typography ─────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap');
+
+/* ── Design Tokens ──────────────────────────────────────────────── */
+@layer base {
+  :root {
+    /* Surfaces */
+    --bg:        #06090f;
+    --bg-warm:   #080b13;
+    --surface:   #0c1018;
+    --surface-2: #111620;
+    --card:      #0f1420;
+    --card-hi:   #151c2b;
+
+    /* Borders */
+    --border:    rgba(255 255 255 / 0.06);
+    --border-2:  rgba(255 255 255 / 0.10);
+    --border-3:  rgba(255 255 255 / 0.16);
+
+    /* Text */
+    --text:      #e8ecf4;
+    --text-2:    #c0c9d8;
+    --muted:     #6b7a94;
+    --subtle:    #3e4f68;
+
+    /* Accents — refined medical palette */
+    --accent:    #d4a853;   /* warm gold — authority */
+    --accent-2:  #e8c47a;
+    --picc:      #34d399;
+    --cvc-sub:   #fb923c;
+    --cvc-yug:   #a78bfa;
+    --midline:   #22d3ee;
+    --danger:    #f87171;
+    --warn:      #fbbf24;
+    --info:      #60a5fa;
+    --success:   #34d399;
+
+    /* Fonts */
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body:    'Plus Jakarta Sans', system-ui, sans-serif;
+
+    /* Spacing rhythm */
+    --section-py: clamp(4rem, 8vw, 7rem);
+  }
+
+  html {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    overflow-x: hidden;
+  }
+
+  /* Selection */
+  ::selection {
+    background: rgba(212, 168, 83, 0.25);
+    color: #fff;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--subtle); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+}
+
+/* ── Noise texture overlay ──────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px;
+}
+
+/* ── Progress bar ────────────────────────────────────────────────── */
+#scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--picc) 40%, var(--cvc-yug) 70%, var(--midline) 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  z-index: 200;
+  pointer-events: none;
+}
+
+/* ── Layout ──────────────────────────────────────────────────────── */
+@layer components {
+  .container-section {
+    @apply max-w-6xl mx-auto px-5 sm:px-8 lg:px-10;
+  }
+
+  .container-narrow {
+    @apply max-w-4xl mx-auto px-5 sm:px-8 lg:px-10;
+  }
+
+  /* ── Section headers — editorial style ── */
+  .section-label {
+    font-family: var(--font-body);
+    letter-spacing: 0.2em;
+    @apply text-[10px] sm:text-xs font-semibold uppercase;
+    color: var(--accent);
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    @apply text-3xl sm:text-4xl lg:text-[2.75rem] font-normal leading-[1.15] text-white;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--accent-2);
+  }
+
+  .section-subtitle {
+    @apply text-sm sm:text-base leading-relaxed mt-4 max-w-lg;
+    color: var(--muted);
+  }
+
+  /* ── Divider ── */
+  .section-divider {
+    @apply w-12 h-px mx-auto my-6;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    @apply rounded-2xl transition-all duration-500;
+  }
+
+  .card:hover {
+    border-color: var(--border-2);
+    background: var(--card-hi);
+    box-shadow:
+      0 0 0 1px rgba(212, 168, 83, 0.04),
+      0 20px 60px -12px rgba(0,0,0,0.5);
+  }
+
+  .card-elevated {
+    background: var(--card);
+    border: 1px solid var(--border-2);
+    @apply rounded-2xl;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.3),
+      0 8px 32px -8px rgba(0,0,0,0.4);
+  }
+
+  /* ── Badges ── */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border tracking-wide;
+  }
+  .badge-picc    { @apply bg-emerald-500/8 text-emerald-400 border-emerald-500/20; }
+  .badge-cvc-sub { @apply bg-orange-500/8  text-orange-400  border-orange-500/20; }
+  .badge-cvc-yug { @apply bg-violet-500/8  text-violet-400  border-violet-500/20; }
+  .badge-midline { @apply bg-cyan-500/8    text-cyan-400    border-cyan-500/20; }
+  .badge-central { @apply bg-amber-500/6   text-amber-400   border-amber-500/15; }
+
+  /* ── Alert boxes ── */
+  .alert {
+    @apply flex items-start gap-3 p-4 rounded-xl border;
+  }
+  .alert-warn    { @apply bg-amber-500/5   border-amber-500/15; }
+  .alert-danger  { @apply bg-red-500/5     border-red-500/15; }
+  .alert-success { @apply bg-emerald-500/5 border-emerald-500/15; }
+  .alert-info    { @apply bg-blue-500/5    border-blue-500/15; }
+
+  /* ── Bento cards ── */
+  .bento-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    @apply rounded-2xl p-6 flex flex-col gap-5 transition-all duration-500 cursor-default;
+  }
+
+  .bento-card:hover {
+    border-color: var(--border-2);
+    background: var(--card-hi);
+    @apply -translate-y-1;
+    box-shadow:
+      0 24px 64px -16px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(255,255,255,0.03);
+  }
+
+  /* ── Stat grid ── */
+  .stat-grid {
+    @apply grid grid-cols-2 gap-x-5 gap-y-4;
+  }
+  .stat-label {
+    @apply text-[11px] uppercase tracking-wider font-medium;
+    color: var(--subtle);
+  }
+  .stat-value {
+    @apply text-sm text-white font-medium mt-0.5;
+  }
+
+  /* ── Accordion ── */
+  .accordion-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    @apply rounded-2xl overflow-hidden transition-all duration-300;
+  }
+  .accordion-item:hover {
+    border-color: var(--border-2);
+  }
+  .accordion-trigger {
+    @apply flex items-center justify-between w-full px-6 py-5 cursor-pointer select-none;
+  }
+  .accordion-content {
+    height: 0;
+    overflow: hidden;
+  }
+
+  /* ── Step items ── */
+  .step-item {
+    @apply flex gap-4 items-start;
+  }
+  .step-num {
+    @apply flex-none w-10 h-10 rounded-xl flex items-center justify-center
+           text-sm font-bold shrink-0 mt-0.5;
+    font-family: var(--font-display);
+  }
+
+  /* ── Nav link ── */
+  .nav-link {
+    @apply text-[13px] font-medium transition-colors duration-200 relative;
+    color: var(--muted);
+  }
+  .nav-link:hover {
+    color: var(--text);
+  }
+  .nav-link.active {
+    color: var(--accent);
+  }
+
+  /* ── Quick ref cards ── */
+  .qref-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    @apply rounded-2xl p-5 transition-all duration-400;
+  }
+  .qref-card:hover {
+    border-color: var(--border-2);
+    background: var(--card-hi);
+    @apply -translate-y-0.5;
+    box-shadow: 0 16px 48px -12px rgba(0,0,0,0.4);
+  }
+
+  /* ── Indication pills ── */
+  .ind-pill {
+    @apply inline-block px-2.5 py-1 rounded-lg text-[11px] font-medium
+           bg-white/4 border border-white/6;
+    color: var(--muted);
+  }
+  .ind-pill.yes {
+    @apply bg-emerald-500/6 text-emerald-400 border-emerald-500/15;
+  }
+  .ind-pill.no {
+    @apply bg-red-500/6 text-red-400 border-red-500/15;
+  }
+
+  /* ── Comparison table ── */
+  .comp-table {
+    @apply w-full text-sm;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .comp-table th {
+    @apply px-5 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.15em];
+    background: var(--surface-2);
+    color: var(--muted);
+  }
+  .comp-table td {
+    @apply px-5 py-4 border-t;
+    border-color: var(--border);
+    background: var(--card);
+  }
+  .comp-table tr:hover td {
+    background: var(--card-hi);
+  }
+  .comp-table tbody tr td:first-child {
+    font-weight: 500;
+    color: var(--text-2);
+  }
+}
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.hero-bg {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212, 168, 83, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 20% 60%, rgba(52, 211, 153, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 50% at 80% 30%, rgba(34, 211, 238, 0.03) 0%, transparent 50%),
+    var(--bg);
+}
+
+/* ── Section alternating ────────────────────────────────────────── */
+.section-alt {
+  background: var(--surface);
+}
+
+/* ── Reveal (initial state for GSAP) ───────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.96) translateY(20px);
+}
+
+/* ── Mobile menu ────────────────────────────────────────────────── */
+#mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(6,9,15,0.98);
+  z-index: 60;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  backdrop-filter: blur(20px);
+}
+#mobile-menu.open {
+  display: flex;
+}
+
+/* ── Gold line decorations ──────────────────────────────────────── */
+.gold-line {
+  @apply h-px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+}
+
+.gold-line-left {
+  @apply h-px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0.2;
+}
+
+/* ── Glow effects (subtle) ──────────────────────────────────────── */
+.glow-picc    { box-shadow: 0 0 40px -12px rgba(52, 211, 153, 0.15); }
+.glow-cvc-sub { box-shadow: 0 0 40px -12px rgba(251, 146, 60, 0.15); }
+.glow-cvc-yug { box-shadow: 0 0 40px -12px rgba(167, 139, 250, 0.15); }
+.glow-midline { box-shadow: 0 0 40px -12px rgba(34, 211, 238, 0.15); }
+
+/* ── Device button (for selector) ───────────────────────────────── */
+.device-btn {
+  @apply inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border cursor-pointer transition-all duration-200;
+}
+.device-btn.active {
+  @apply ring-1 ring-offset-1 ring-offset-transparent;
+}
+.device-btn:not(.active) {
+  opacity: 0.5;
+}
+.device-btn:hover:not(.active) {
+  opacity: 0.8;
+}
+
+/* Stage cards */
+.stage-card {
+  @apply relative pl-3 py-2 rounded-lg transition-all duration-200;
+  background: transparent;
+}
+.stage-card.active {
+  background: rgba(255,255,255,0.03);
+}

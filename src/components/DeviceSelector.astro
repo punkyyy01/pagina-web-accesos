@@ -1,0 +1,162 @@
+---
+/**
+ * DeviceSelector.astro
+ * Botonera para alternar entre PICC, CVC Subclavio, CVC Yugular y Midline.
+ * Emite un CustomEvent 'device-change' que VascularMap escucha.
+ */
+---
+
+<div class="device-selector-wrapper">
+  <!-- Tabs de selección -->
+  <div class="flex flex-wrap gap-2 justify-center mb-6" role="tablist" aria-label="Seleccionar dispositivo de acceso vascular">
+
+    <button class="device-btn badge-picc active" data-device="picc" role="tab" aria-selected="true">
+      <span class="mr-1.5">🩹</span> PICC
+    </button>
+
+    <button class="device-btn badge-cvc-sub" data-device="cvc-subclavio" role="tab" aria-selected="false">
+      <span class="mr-1.5">💉</span> CVC Subclavio
+    </button>
+
+    <button class="device-btn badge-cvc-yug" data-device="cvc-yugular" role="tab" aria-selected="false">
+      <span class="mr-1.5">💉</span> CVC Yugular
+    </button>
+
+    <button class="device-btn badge-midline" data-device="midline" role="tab" aria-selected="false">
+      <span class="mr-1.5">🩺</span> Midline
+    </button>
+
+  </div>
+
+  <!-- Tarjetas de etapas — se actualizan según progreso de scroll -->
+  <div class="stages-container">
+
+    <!-- PICC stages -->
+    <div data-device-stages="picc" class="device-stages">
+      <p class="text-xs text-slate-500 mb-2 uppercase tracking-wider">Recorrido del catéter</p>
+      <div class="flex flex-col gap-2">
+        <div class="stage-card active" data-stage="0">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-green-500"></span>
+          <p class="text-xs font-semibold text-green-400 pl-3">① Inserción</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">Fosa antecubital — vena basílica o cefálica</p>
+        </div>
+        <div class="stage-card" data-stage="1">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-green-500/50"></span>
+          <p class="text-xs font-semibold text-green-400 pl-3">② Vena Axilar</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">El catéter asciende por el brazo hacia la axila</p>
+        </div>
+        <div class="stage-card" data-stage="2">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-green-500/50"></span>
+          <p class="text-xs font-semibold text-green-400 pl-3">③ Vena Subclavia</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">Cruza la clavícula — zona de mayor riesgo mecánico</p>
+        </div>
+        <div class="stage-card" data-stage="3">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-green-500/50"></span>
+          <p class="text-xs font-semibold text-green-400 pl-3">④ V. Braquiocefálica</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">Confluencia venosa hacia la línea media</p>
+        </div>
+        <div class="stage-card" data-stage="4">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-red-500"></span>
+          <p class="text-xs font-semibold text-red-400 pl-3">⑤ VCS — Unión cavoatrial</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">Posición óptima: tercio inferior de la VCS / aurícula derecha</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CVC Subclavio stages -->
+    <div data-device-stages="cvc-subclavio" class="device-stages hidden">
+      <p class="text-xs text-slate-500 mb-2 uppercase tracking-wider">Recorrido CVC Subclavio</p>
+      <div class="flex flex-col gap-2">
+        <div class="stage-card active" data-stage="0">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-orange-500"></span>
+          <p class="text-xs font-semibold text-orange-400 pl-3">① Punción Infraclavicular</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">1/3 medio de la clavícula, ángulo 15–30°</p>
+        </div>
+        <div class="stage-card" data-stage="1">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-orange-500/50"></span>
+          <p class="text-xs font-semibold text-orange-400 pl-3">② Subclavia → Braquiocefálica</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">Acceso directo sin rodear el brazo</p>
+        </div>
+        <div class="stage-card" data-stage="2">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-red-500"></span>
+          <p class="text-xs font-semibold text-red-400 pl-3">③ VCS — Posición final</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">Confirmación radiológica obligatoria (Rx tórax)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CVC Yugular stages -->
+    <div data-device-stages="cvc-yugular" class="device-stages hidden">
+      <p class="text-xs text-slate-500 mb-2 uppercase tracking-wider">Recorrido CVC Yugular Interno</p>
+      <div class="flex flex-col gap-2">
+        <div class="stage-card active" data-stage="0">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-purple-500"></span>
+          <p class="text-xs font-semibold text-purple-400 pl-3">① Punción Yugular</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">Triángulo posterior del esternocleidomastoideo</p>
+        </div>
+        <div class="stage-card" data-stage="1">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-purple-500/50"></span>
+          <p class="text-xs font-semibold text-purple-400 pl-3">② Unión Yugulo-Subclavia</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">El catéter desciende por el cuello hacia el tórax</p>
+        </div>
+        <div class="stage-card" data-stage="2">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-red-500"></span>
+          <p class="text-xs font-semibold text-red-400 pl-3">③ VCS — Posición final</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">Ruta más corta al VCS — menor riesgo de malposición</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Midline stages -->
+    <div data-device-stages="midline" class="device-stages hidden">
+      <p class="text-xs text-slate-500 mb-2 uppercase tracking-wider">Recorrido Midline</p>
+      <div class="flex flex-col gap-2">
+        <div class="stage-card active" data-stage="0">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-cyan-500"></span>
+          <p class="text-xs font-semibold text-cyan-400 pl-3">① Inserción Antecubital</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">Fosa antecubital — igual que PICC</p>
+        </div>
+        <div class="stage-card" data-stage="1">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-cyan-500/50"></span>
+          <p class="text-xs font-semibold text-cyan-400 pl-3">② Vena Basílica / Cefálica</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">Avanza por el brazo superior hacia la axila</p>
+        </div>
+        <div class="stage-card" data-stage="2">
+          <span class="absolute -left-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-yellow-500"></span>
+          <p class="text-xs font-semibold text-yellow-400 pl-3">⚠ Límite — Vena Axilar</p>
+          <p class="text-xs text-slate-400 pl-3 mt-0.5">
+            <strong class="text-yellow-400">NO supera la clavícula.</strong> No es catéter central.
+            Longitud 8–20 cm. No apto para nutrición parenteral total.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── Lógica del selector ──────────────────────────────────────
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-device]');
+  const stageGroups = document.querySelectorAll<HTMLElement>('[data-device-stages]');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const device = btn.dataset.device!;
+
+      // Actualizar estado de botones
+      buttons.forEach(b => {
+        b.classList.toggle('active', b === btn);
+        b.setAttribute('aria-selected', String(b === btn));
+      });
+
+      // Mostrar grupo de stages del dispositivo activo
+      stageGroups.forEach(g => {
+        g.classList.toggle('hidden', g.dataset.deviceStages !== device);
+      });
+
+      // Emitir evento para VascularMap
+      document.dispatchEvent(new CustomEvent('device-change', { detail: { device } }));
+    });
+  });
+</script>
