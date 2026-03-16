@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "package.json", "use": "@vercel/node" },
+    { "src": "astro.config.mjs", "use": "@astro/vercel" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.astro" }
+  ]
+}
