@@ -337,9 +337,14 @@ body::before {
   justify-content: center;
   gap: 1.5rem;
   backdrop-filter: blur(20px);
+  touch-action: manipulation;
+  min-width: 100vw;
+  min-height: 100vh;
 }
 #mobile-menu.open {
   display: flex;
+  /* Extra padding for touch targets */
+  padding: 2rem 0;
 }
 
 /* ── Gold line decorations ──────────────────────────────────────── */

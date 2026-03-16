@@ -210,8 +210,18 @@ const {
       toggle.addEventListener('click', () =>
         menu.classList.contains('open') ? closeMobileMenu() : openMobileMenu()
       );
+      // Touch support for menu toggle
+      toggle.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        menu.classList.contains('open') ? closeMobileMenu() : openMobileMenu();
+      });
       closeBtn.addEventListener('click', closeMobileMenu);
+      closeBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        closeMobileMenu();
+      });
       menu.addEventListener('click', e => { if (e.target === menu) closeMobileMenu(); });
+      menu.addEventListener('touchstart', e => { if (e.target === menu) closeMobileMenu(); });
     </script>
   </body>
 </html>

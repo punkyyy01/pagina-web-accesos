@@ -141,22 +141,24 @@
   const stageGroups = document.querySelectorAll<HTMLElement>('[data-device-stages]');
 
   buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
+    function activateDevice() {
       const device = btn.dataset.device!;
-
       // Actualizar estado de botones
       buttons.forEach(b => {
         b.classList.toggle('active', b === btn);
         b.setAttribute('aria-selected', String(b === btn));
       });
-
       // Mostrar grupo de stages del dispositivo activo
       stageGroups.forEach(g => {
         g.classList.toggle('hidden', g.dataset.deviceStages !== device);
       });
-
       // Emitir evento para VascularMap
       document.dispatchEvent(new CustomEvent('device-change', { detail: { device } }));
+    }
+    btn.addEventListener('click', activateDevice);
+    btn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      activateDevice();
     });
   });
 </script>
