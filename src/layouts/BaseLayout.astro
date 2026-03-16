@@ -1,3 +1,6 @@
+---
+import Analytics from '@vercel/analytics/astro';
+
 interface Props {
   title?: string;
   description?: string;
@@ -6,7 +9,7 @@ const {
   title = "Accesos Vasculares — Hospital del Salvador",
   description = "Guía clínica rápida sobre dispositivos de acceso vascular (PICC, CVC, Midline) para personal de enfermería y medicina del Hospital del Salvador."
 } = Astro.props;
-import Analytics from '@vercel/analytics/astro';
+---
 <!doctype html>
 <html lang="es">
   <head>
